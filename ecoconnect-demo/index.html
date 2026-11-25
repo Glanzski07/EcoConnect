@@ -1,0 +1,921 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>EcoConnect · Panimahawa Ridge</title>
+  <meta name="description" content="Visual prototype: smart ecotourism management for Panimahawa Ridge, Impasugong, Bukidnon.">
+  <meta name="theme-color" content="#14532d">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/svg+xml" href="icon.svg">
+  <script src="vendor/tailwind.js"></script>
+  <script>
+    tailwind.config = {
+      theme: { extend: {
+        colors: {
+          forest: { 50: '#f2fbf4', 100: '#dcfce7', 500: '#16a34a', 600: '#15803d', 700: '#166534', 800: '#14532d', 900: '#0b3a24' },
+          clay: { 500: '#b45309', 600: '#92400e' }
+        },
+        fontFamily: { sans: ['ui-sans-serif', 'system-ui', '"Segoe UI"', 'Roboto', 'Arial', 'sans-serif'] }
+      } }
+    };
+  </script>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="font-sans">
+<header class="topbar">
+  <div class="brand">
+    <div class="logo"><i data-lucide="mountain-snow"></i></div>
+    <div>
+      <div class="brand-name">EcoConnect</div>
+      <div class="brand-sub">Panimahawa Ridge · Impasugong, Bukidnon</div>
+    </div>
+  </div>
+  <nav id="mainNav" class="nav-links" aria-label="Main navigation">
+    <button data-page="register" data-roles="visitor">Pre-registration</button>
+    <button data-page="gate" data-roles="gate">Gate terminal</button>
+    <button data-page="guide" data-roles="guide">Guide app</button>
+    <button data-page="dashboard" data-roles="admin">Dashboard</button>
+    <button data-page="trailmap" data-roles="admin">Trail map</button>
+    <button data-page="sos" data-roles="admin">SOS alerts</button>
+    <button data-page="scheduling" data-roles="admin">Guide scheduling</button>
+    <button data-page="metrics" data-roles="admin">Metrics</button>
+    <button data-page="settings" data-roles="admin">Trail settings</button>
+  </nav>
+  <div class="role-switch" role="group" aria-label="Switch demo role">
+    <span class="role-label">Demo role</span>
+    <button data-role="visitor">Visitor</button>
+    <button data-role="gate">Gate staff</button>
+    <button data-role="admin" class="active">Admin</button>
+    <button data-role="guide">Tour guide</button>
+  </div>
+  <button id="signOutBtn" class="signout-btn hidden" type="button"><i data-lucide="log-out"></i>Sign out</button>
+</header>
+
+<main>
+  <!-- ================= VISITOR ================= -->
+  <section id="page-register" class="page">
+    <div class="page-wrap">
+      <div class="hero">
+        <div class="hero-inner">
+          <div>
+            <div class="eyebrow">Smart ecotourism · Bukidnon</div>
+            <h1>Trek smart.<br>Stay connected.</h1>
+            <p>Reserve your Panimahawa Ridge slot, get a guide matched by rule-based scheduling, and stay covered by the off-grid LoRa SOS network from gate to summit.</p>
+            <div class="hero-actions">
+              <a href="#bookingFormWrap" class="btn btn-light"><i data-lucide="calendar-plus"></i>Reserve a slot</a>
+              <button class="btn btn-outline-light" data-goto="gate"><i data-lucide="scan-line"></i>Gate check-in demo</button>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat"><b>4.5 km</b><span>Trail length</span></div>
+              <div class="hero-stat"><b>5</b><span>LoRa checkpoints</span></div>
+              <div class="hero-stat"><b>3.2 s</b><span>SOS latency</span></div>
+            </div>
+          </div>
+          <div class="hero-card">
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-[11px] uppercase tracking-wider opacity-70">Today at the ridge</span>
+              <span class="badge badge-amber">Peak weekend</span>
+            </div>
+            <div class="flex items-end gap-2 mt-3">
+              <span class="text-4xl font-extrabold">24°C</span>
+              <span class="text-sm opacity-75 mb-1">Partly cloudy</span>
+            </div>
+            <div class="grid grid-cols-2 gap-3 mt-4 text-sm">
+              <div><div class="opacity-60 text-[11px]">Trail condition</div><div class="font-semibold">Dry · passable</div></div>
+              <div><div class="opacity-60 text-[11px]">LoRa coverage</div><div class="font-semibold">5 / 5 checkpoints</div></div>
+              <div><div class="opacity-60 text-[11px]">Sunrise</div><div class="font-semibold">5:38 AM</div></div>
+              <div><div class="opacity-60 text-[11px]">Visitors today</div><div class="font-semibold">412</div></div>
+            </div>
+            <div class="mt-4 pt-4 border-t border-white/15 text-[11px] opacity-75">Gate opens 4:45 AM · last descent 4:00 PM</div>
+          </div>
+        </div>
+        <svg class="hero-ridge" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M0 150 L180 90 L300 130 L430 60 L560 120 L700 70 L840 140 L980 80 L1120 130 L1260 75 L1440 140 L1440 200 L0 200Z" fill="#0b3a24" opacity=".55"/>
+          <path d="M0 180 L160 130 L300 165 L460 105 L620 160 L780 115 L940 170 L1100 120 L1280 165 L1440 120 L1440 200 L0 200Z" fill="#082e1c" opacity=".75"/>
+        </svg>
+      </div>
+
+      <div class="grid-main mt-18" id="bookingFormWrap">
+        <form id="bookingForm" class="card" novalidate>
+          <div class="card-head">
+            <div>
+              <h2>Visitor pre-registration</h2>
+              <div class="sub">Solo or group · takes about a minute</div>
+            </div>
+            <span class="badge badge-green"><i data-lucide="shield-check" class="w-3.5 h-3.5"></i>Includes SOS coverage</span>
+          </div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field">
+                <label for="leaderName">Lead trekker</label>
+                <input id="leaderName" name="leaderName" value="Ramil D. Abas" placeholder="Full name" required>
+              </div>
+              <div class="field">
+                <label for="contact">Mobile number</label>
+                <input id="contact" name="contact" value="0917 555 0142" placeholder="09xx xxx xxxx" required>
+              </div>
+              <div class="field">
+                <label for="visitDate">Trek date</label>
+                <input id="visitDate" name="visitDate" type="date" required>
+              </div>
+              <div class="field">
+                <label for="groupSize">Group size</label>
+                <input id="groupSize" name="groupSize" type="number" min="1" max="30" value="8" required>
+                <span class="hint">Ages 7 and up · max 30 per booking</span>
+              </div>
+              <div class="field span-2">
+                <label>Trekker type</label>
+                <div class="type-toggle" id="trekkerToggle" role="group" aria-label="Trekker type">
+                  <button type="button" class="type-btn active" data-trekker="group"><i data-lucide="users"></i>Group trekker</button>
+                  <button type="button" class="type-btn" data-trekker="solo"><i data-lucide="user"></i>Solo trekker</button>
+                </div>
+              </div>
+              <div class="field span-2" id="memberNamesWrap">
+                <label for="memberNames">Group member names</label>
+                <textarea id="memberNames" rows="2" placeholder="One name per line — leader not included"></textarea>
+                <span class="hint">Used for the group manifest. Leave blank if not needed.</span>
+              </div>
+              <div class="field span-2">
+                <label for="emergency">Emergency contact</label>
+                <input id="emergency" name="emergency" value="Ate Marites S. · 0918 555 0199" placeholder="Name and number" required>
+              </div>
+              <div class="span-2 flex items-center justify-between gap-4 rounded-xl border border-[#e2e9de] bg-[#fbfdf9] px-4 py-3">
+                <div>
+                  <div class="text-sm font-bold text-forest-900">Heavy baggage / porter needed</div>
+                  <div class="text-xs text-slate-500">Triggers rule R4 — a senior certified guide is assigned.</div>
+                </div>
+                <label class="switch" aria-label="Heavy baggage">
+                  <input type="checkbox" id="heavyBaggage">
+                  <span class="track"></span>
+                </label>
+              </div>
+            </div>
+            <div class="form-summary mt-4"><i data-lucide="info" class="w-4 h-4"></i><span id="formSummary">7:00 AM · 12 seats left</span></div>
+            <div class="flex flex-wrap items-center gap-3 mt-4">
+              <button type="submit" class="btn btn-primary"><i data-lucide="check"></i>Reserve slot</button>
+              <span class="text-xs text-slate-500">No payment in this demo · mock booking only</span>
+            </div>
+          </div>
+        </form>
+
+        <div class="stack">
+          <div class="card">
+            <div class="card-head">
+              <div>
+                <h2>Trek calendar</h2>
+                <div class="sub">Pick a date · color shows capacity</div>
+              </div>
+              <div class="cal-nav">
+                <button id="calPrev" class="cal-nav-btn" type="button" aria-label="Previous month"><i data-lucide="chevron-left"></i></button>
+                <span class="badge badge-slate" id="calMonth">Nov 2026</span>
+                <button id="calNext" class="cal-nav-btn" type="button" aria-label="Next month"><i data-lucide="chevron-right"></i></button>
+              </div>
+            </div>
+            <div class="card-body">
+              <div class="cal-legend">
+                <span><i class="green"></i>Plenty of slots</span>
+                <span><i class="amber"></i>Almost full</span>
+                <span><i class="red"></i>Full</span>
+              </div>
+              <div id="trailCalendar" class="trail-calendar"></div>
+              <div class="cal-saved">
+                <span><i data-lucide="calendar-check"></i><b id="calSaved">0</b> reservations saved</span>
+                <span id="calSelectedDate" class="cal-selected-date"></span>
+              </div>
+              <p class="hint">Fully booked dates close automatically under rule R1. Walk-ins are counted separately.</p>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Before you go</h2><span class="chip"><i data-lucide="sunrise"></i>Gate opens 4:45 AM</span></div>
+            <div class="card-body">
+              <div class="list-check">
+                <div><i data-lucide="id-card"></i><span>Bring a valid ID and your booking code.</span></div>
+                <div><i data-lucide="droplet"></i><span>At least 1 liter of water per person.</span></div>
+                <div><i data-lucide="backpack"></i><span>Poncho, trail shoes, and a light jacket for the ridge.</span></div>
+                <div><i data-lucide="radio"></i><span>LoRa SOS trackers work at all 5 checkpoints — no cell signal needed.</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="confirmation" class="hidden">
+        <div class="card confirm-card">
+          <div class="grid md:grid-cols-[auto_1fr] gap-8 items-start">
+            <div>
+              <div class="success-ring"><i data-lucide="check"></i></div>
+              <h2 class="text-2xl font-extrabold text-forest-900 mt-3">You're booked!</h2>
+              <p class="text-sm text-slate-500 mt-1">Show this code at the entry gate.</p>
+              <div class="qr-frame"><canvas id="qrCanvas" width="176" height="176" aria-label="Mock booking QR code"></canvas></div>
+              <div class="code" id="confirmCode">EC-0000-000</div>
+              <div class="text-[11px] text-slate-400">Mock QR · demo only</div>
+            </div>
+            <div>
+              <div class="detail-grid">
+                <div class="detail"><span>Trek date</span><b id="confirmDate">—</b></div>
+                <div class="detail"><span>Time slot</span><b id="confirmSlot">—</b></div>
+                <div class="detail"><span>Trek party</span><b id="confirmGroup">—</b></div>
+                <div class="detail"><span>Assigned guide</span><b id="confirmGuide">—</b></div>
+              </div>
+              <div class="detail mt-3"><span>Guide profile</span><b id="confirmGuideMeta">—</b></div>
+              <details class="why-card">
+                <summary>Why this guide? <span>Rules R1–R6 evaluated</span></summary>
+                <div id="whyGuide" class="py-2"></div>
+              </details>
+              <div class="flex flex-wrap gap-2 mt-4">
+                <button id="newBookingBtn" class="btn btn-primary"><i data-lucide="plus"></i>Book another trek</button>
+                <button class="btn btn-ghost" data-goto="gate"><i data-lucide="scan-line"></i>Try the gate terminal</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TOUR GUIDE (PHONE) ================= -->
+  <section id="page-guide" class="page">
+    <div class="guide-wrap">
+      <div class="guide-phone">
+        <div id="guideLogin">
+          <div class="guide-login-hero">
+            <div class="flex items-center justify-between gap-2">
+              <div class="guide-brand">
+                <div class="guide-logo"><i data-lucide="leaf"></i></div>
+                <div>
+                  <div class="font-extrabold">EcoConnect Guide</div>
+                  <div class="text-[11px] opacity-70">Panimahawa Ridge</div>
+                </div>
+              </div>
+              <span class="badge badge-green">Guide app</span>
+            </div>
+            <h1>Your trail.<br>In your pocket.</h1>
+            <p>Assignments, weekly schedule, and leave requests for Panimahawa guides.</p>
+            <span class="guide-pwa"><i data-lucide="download"></i>Installable PWA – works on your phone</span>
+          </div>
+          <form id="guideLoginForm" class="guide-login-card">
+            <div class="field">
+              <label for="guideUser">Guide ID or username</label>
+              <input id="guideUser" value="kuya.ramil" autocomplete="username">
+            </div>
+            <div class="field">
+              <label for="guidePass">Password</label>
+              <input id="guidePass" type="password" value="guide123" autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary w-full" style="padding:12px"><i data-lucide="log-in"></i>Log in</button>
+            <p class="hint text-center">Demo only · any credentials work</p>
+          </form>
+        </div>
+
+        <div id="guideApp" class="hidden">
+          <div class="guide-app-head">
+            <div class="flex items-center gap-3">
+              <span class="guide-avatar">RD</span>
+              <div class="min-w-0 flex-1">
+                <div class="font-extrabold">Kuya Ramil D.</div>
+                <div class="text-[11px] opacity-75">Guide ID G-001 · Available</div>
+              </div>
+              <button id="guideLogout" class="guide-logout" aria-label="Log out"><i data-lucide="log-out"></i></button>
+            </div>
+            <div class="guide-date" id="guideDate">Today · Sun, Nov 22</div>
+          </div>
+          <div class="guide-tabs" role="tablist">
+            <button data-guide-tab="assignments" class="active"><i data-lucide="clipboard-list"></i>Assignments</button>
+            <button data-guide-tab="schedule"><i data-lucide="calendar-days"></i>Schedule</button>
+            <button data-guide-tab="leave"><i data-lucide="file-text"></i>Leave</button>
+          </div>
+          <div class="guide-body">
+            <div id="guideTab-assignments" class="guide-tab">
+              <div class="guide-section-title">Today's assigned group <span id="guideTodayDate"></span></div>
+              <div id="guideToday"></div>
+              <div class="guide-section-title mt-4">Upcoming assignments</div>
+              <div id="guideUpcoming" class="guide-list"></div>
+            </div>
+            <div id="guideTab-schedule" class="guide-tab hidden">
+              <div class="flex items-center justify-between gap-2 mb-3">
+                <div class="guide-section-title m-0">This week</div>
+                <span class="badge badge-green" id="guideWeekCount">4 assignments</span>
+              </div>
+              <div class="guide-week" id="guideWeek"></div>
+              <div class="guide-legend"><span><i class="assigned"></i>Assigned</span><span><i class="off"></i>Off day</span><span><i class="leave"></i>Approved leave</span></div>
+              <div class="guide-note"><i data-lucide="info"></i>Fair rotation keeps weekly assignments balanced across the 10 guides.</div>
+            </div>
+            <div id="guideTab-leave" class="guide-tab hidden">
+              <div class="guide-section-title">File leave / off-duty notice</div>
+              <form id="leaveForm" class="guide-form">
+                <div class="field"><label for="leaveDate">Date</label><input type="date" id="leaveDate" required></div>
+                <div class="field"><label for="leaveType">Type</label>
+                  <select id="leaveType"><option>Leave</option><option>Off-duty</option><option>Sick</option></select>
+                </div>
+                <div class="field"><label for="leaveReason">Reason</label><input id="leaveReason" placeholder="Short reason" required></div>
+                <button type="submit" class="btn btn-primary w-full"><i data-lucide="send"></i>Submit notice</button>
+              </form>
+              <div id="leaveConfirm" class="guide-confirm hidden"><i data-lucide="check-circle-2"></i>Notice sent to admin</div>
+              <div class="guide-section-title mt-4">My notices</div>
+              <div id="guideNotices" class="guide-list"></div>
+            </div>
+          </div>
+          <div class="guide-tabbar-note">EcoConnect guide demo · mock data only</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= ADMIN DASHBOARD ================= -->
+  <section id="page-dashboard" class="page active">
+    <div class="page-wrap">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Operations · Peak weekend</div>
+          <h1>Admin dashboard</h1>
+          <p>Live overview of Panimahawa Ridge · <span id="dashDate">Sat, Nov 22, 2026</span> · updated 12:44 PM</p>
+        </div>
+        <div class="head-actions">
+          <button id="openTrailMapBtn" class="btn btn-ghost"><i data-lucide="map"></i>Trail map</button>
+          <button id="simulateSosBtn" class="btn btn-danger"><i data-lucide="siren"></i>Simulate SOS</button>
+        </div>
+      </div>
+
+      <div id="sosBanner" class="hidden" aria-live="assertive"></div>
+
+      <div class="kpi-grid">
+        <div class="card kpi">
+          <div class="kpi-icon"><i data-lucide="users"></i></div>
+          <div>
+            <div class="kpi-label">Visitors today</div>
+            <div class="kpi-value" id="kpiVisitors">412</div>
+            <div class="kpi-sub up" id="kpiVisitorsSub">+12% vs last weekend</div>
+          </div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-icon amber"><i data-lucide="gauge"></i></div>
+          <div>
+            <div class="kpi-label">Capacity used</div>
+            <div class="kpi-value" id="kpiCapacity">67%</div>
+            <div class="kpi-sub" id="kpiCapacitySub">335 / 500 pre-booked seats</div>
+          </div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-icon"><i data-lucide="footprints"></i></div>
+          <div>
+            <div class="kpi-label">Active groups</div>
+            <div class="kpi-value" id="kpiGroups">14</div>
+            <div class="kpi-sub" id="kpiGroupsSub">6 on the summit trail</div>
+          </div>
+        </div>
+        <div class="card kpi">
+          <div class="kpi-icon sos"><i data-lucide="siren"></i></div>
+          <div>
+            <div class="kpi-label">Open SOS</div>
+            <div class="kpi-value" id="kpiSos">0</div>
+            <div class="kpi-sub" id="kpiSosSub">All trekkers accounted for</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Bookings per day</h2><div class="sub">This week · all slots</div></div>
+            <span class="badge badge-slate">449 total</span>
+          </div>
+          <div class="chart-box"><canvas id="bookingsChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Guide status</h2><div class="sub">10 guides on roster</div></div>
+            <span class="badge badge-green">5 available</span>
+          </div>
+          <div class="chart-box"><canvas id="guideStatusChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Trail & nodes</h2><div class="sub">Checkpoint-based · no GPS until SOS</div></div>
+            <button class="btn btn-ghost btn-sm" data-goto="trailmap"><i data-lucide="map"></i>Open map</button>
+          </div>
+          <div class="card-body" id="dashTrailStatus"></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>LoRa network</h2><div class="sub">Off-grid SOS backbone</div></div>
+            <span class="badge badge-green"><span class="dot"></span>Gateway online</span>
+          </div>
+          <div class="card-body">
+            <div class="flex items-center justify-between gap-2 text-sm">
+              <span class="font-bold text-forest-900" id="loraGateway">Panimahawa Gateway 01</span>
+              <span class="text-xs text-slate-500"><span id="loraNodes">3</span> field nodes</span>
+            </div>
+            <div class="lora-grid mt-3">
+              <div class="lora-stat"><span>Packet delivery</span><b id="loraDelivery">94%</b></div>
+              <div class="lora-stat"><span>SOS latency</span><b id="loraLatency">3.2 s</b></div>
+              <div class="lora-stat"><span>Uptime</span><b id="loraUptime">99.1%</b></div>
+              <div class="lora-stat"><span>Packets today</span><b id="loraPackets">1,284</b></div>
+            </div>
+            <div class="mt-3">
+              <div class="gw-row"><span class="gw-dot"></span><span class="font-semibold">Node A · CP1</span><span class="ml-auto text-xs text-slate-500">−64 dBm</span></div>
+              <div class="gw-row"><span class="gw-dot"></span><span class="font-semibold">Node B · CP2</span><span class="ml-auto text-xs text-slate-500">−71 dBm</span></div>
+              <div class="gw-row"><span class="gw-dot" style="background:#d97706"></span><span class="font-semibold">Node C · CP3</span><span class="ml-auto text-xs text-amber-700">−87 dBm · weak</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Guide roster</h2><div class="sub">Assignments reset every Monday</div></div>
+            <span class="chip"><i data-lucide="user-check"></i>10 guides</span>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>Guide</th><th>Status</th><th>Assignments</th><th>Tag</th></tr></thead>
+              <tbody id="guideTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Alert history</h2><div class="sub">Resolved SOS events</div></div>
+            <span class="badge badge-slate" id="alertHistoryCount">3 events</span>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table alert-history">
+              <thead><tr><th>Alert</th><th>Location</th><th>Response</th></tr></thead>
+              <tbody id="alertHistoryBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= TRAIL MAP ================= -->
+  <section id="page-trailmap" class="page">
+    <div class="page-wrap">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Field network · stored map</div>
+          <h1>Trail map</h1>
+          <p>Guides appear at the node that last heard their tracker. GPS is off until an SOS is pressed.</p>
+        </div>
+        <div class="head-actions">
+          <button id="mapSimSosBtn" class="btn btn-danger"><i data-lucide="siren"></i>Simulate SOS</button>
+          <button id="nodeUpdateBtn" class="btn btn-ghost"><i data-lucide="radio-tower"></i>Simulate node update</button>
+          <button id="lostContactBtn" class="btn btn-ghost"><i data-lucide="triangle-alert"></i>Simulate lost contact</button>
+        </div>
+      </div>
+
+      <div class="map-layout">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Panimahawa Ridge trail</h2><div class="sub">Gateway + 3 nodes · estimated coverage</div></div>
+            <span class="badge badge-green"><span class="dot"></span>Gateway online</span>
+          </div>
+          <div class="map-canvas">
+            <svg id="trailMapSvg" viewBox="0 0 640 420" role="img" aria-label="Stored terrain map of the Panimahawa Ridge trail with gateway, three nodes, coverage circles, and guide markers.">
+              <defs>
+                <linearGradient id="terrainSky" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0" stop-color="#eef0ec"/>
+                  <stop offset="1" stop-color="#dfe3de"/>
+                </linearGradient>
+              </defs>
+              <rect width="640" height="420" fill="url(#terrainSky)"/>
+              <path d="M0 300 C 90 250 150 275 220 240 S 330 190 410 210 S 540 170 640 200 L640 420 L0 420Z" fill="#d2d7d1"/>
+              <path d="M0 355 C 110 325 190 340 280 305 S 430 270 520 290 S 600 275 640 285 L640 420 L0 420Z" fill="#c5cbc5"/>
+              <path d="M0 80 C 90 55 170 85 250 60 S 390 30 470 55 S 570 40 640 60 L640 0 L0 0Z" fill="#e6e8e4"/>
+              <g fill="none" stroke="#b4bcb4" stroke-width="1" opacity=".75">
+                <path d="M-10 130 C 90 100 160 135 250 110 S 400 85 500 110 S 600 95 660 115"/>
+                <path d="M-10 170 C 80 145 170 175 260 150 S 400 125 500 150 S 600 135 660 155"/>
+                <path d="M-10 220 C 100 190 180 225 280 195 S 430 170 530 195 S 610 180 660 200"/>
+                <path d="M-10 265 C 90 240 180 270 280 245 S 420 220 520 245 S 610 230 660 250"/>
+                <path d="M-10 310 C 110 285 180 315 290 290 S 430 265 530 290 S 610 275 660 295"/>
+                <path d="M-10 365 C 100 345 190 370 290 345 S 430 320 530 345 S 610 330 660 350"/>
+              </g>
+              <g fill="#c9cec8" opacity=".8">
+                <path d="M55 420 L115 300 L170 420Z"/>
+                <path d="M430 420 L500 285 L575 420Z"/>
+                <path d="M260 420 L310 335 L365 420Z"/>
+              </g>
+              <text x="24" y="34" fill="#9aa39a" font-size="10" font-weight="700" letter-spacing="2">PANIMAHAWA RIDGE · STORED TERRAIN</text>
+              <g id="coverageLayer"></g>
+              <path d="M68 358 C 150 386 230 380 300 340 C 300 300 210 268 188 214 C 170 160 340 190 455 152 C 495 145 545 112 590 78" fill="none" stroke="#0b3a24" stroke-width="10" stroke-linecap="round" opacity=".22"/>
+              <path d="M68 358 C 150 386 230 380 300 340 C 300 300 210 268 188 214 C 170 160 340 190 455 152 C 495 145 545 112 590 78" fill="none" stroke="#16a34a" stroke-width="5" stroke-linecap="round"/>
+              <path d="M68 358 C 150 386 230 380 300 340 C 300 300 210 268 188 214 C 170 160 340 190 455 152 C 495 145 545 112 590 78" fill="none" stroke="#dcfce7" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="8 10" opacity=".8"/>
+              <g id="nodeLayer"></g>
+              <g id="guideLayer"></g>
+              <g id="sosLayer"></g>
+              <text x="590" y="60" fill="#3c5244" font-size="11" font-weight="800" text-anchor="middle">Ridge</text>
+            </svg>
+          </div>
+          <div class="map-legend">
+            <span><i class="gw"></i>Gateway (elevated)</span>
+            <span><i class="node"></i>LoRa node</span>
+            <span><i class="guide"></i>Guide</span>
+            <span><i class="coverage"></i>Coverage · lighter = stronger</span>
+            <span><i class="lost"></i>Lost contact</span>
+            <span><i class="sos"></i>Active SOS</span>
+          </div>
+          <div class="map-note"><i data-lucide="info"></i><span>Estimated coverage. Updated with measured signal data after field testing.</span></div>
+        </div>
+
+        <div class="stack">
+          <div class="card">
+            <div class="card-head"><div><h2>Active SOS</h2><div class="sub">Simulate and respond here</div></div></div>
+            <div class="card-body" id="mapSosPanel"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><div><h2>Marker details</h2><div class="sub" id="mapDetailSub">Click a guide marker</div></div></div>
+            <div class="card-body" id="mapDetails"></div>
+          </div>
+          <div class="card">
+            <div class="card-head">
+              <div><h2>Guides heard</h2><div class="sub">Last node contact</div></div>
+              <span class="badge badge-slate" id="mapLostCount">0 lost</span>
+            </div>
+            <div id="mapGuideList"></div>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The map is a stored image, so it works without internet. Coverage shading is an estimate until the survey walk and field tests.</p>
+    </div>
+  </section>
+
+  <!-- ================= SOS ALERTS ================= -->
+  <section id="page-sos" class="page">
+    <div class="page-wrap">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Emergency · LoRa SOS</div>
+          <h1>SOS alerts</h1>
+          <p>A node area arrives first. A GPS point follows only when the tracker acquires a fix.</p>
+        </div>
+        <div class="head-actions">
+          <label class="no-gps"><input type="checkbox" id="noGpsFix">Simulate no GPS fix</label>
+          <button id="sosPageSimBtn" class="btn btn-danger"><i data-lucide="siren"></i>Simulate SOS</button>
+        </div>
+      </div>
+
+      <div id="sosActiveCard" aria-live="assertive"></div>
+
+      <div class="grid-2 mt-18">
+        <div class="card">
+          <div class="card-head"><div><h2>Two-part location</h2><div class="sub">Node area first, GPS point second</div></div></div>
+          <div class="card-body" id="sosLocation"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>Response</h2><div class="sub">Received → Acknowledged → Resolved</div></div></div>
+          <div class="card-body" id="sosResponse"></div>
+        </div>
+      </div>
+
+      <div class="card mt-18">
+        <div class="card-head">
+          <div><h2>Alert history</h2><div class="sub">Past alerts with GPS fix availability</div></div>
+          <span class="badge badge-slate" id="sosHistoryCount">5 events</span>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table">
+            <thead><tr><th>Time</th><th>Guide</th><th>Node area</th><th>GPS received</th><th>Status</th></tr></thead>
+            <tbody id="sosHistoryBody"></tbody>
+          </table>
+        </div>
+      </div>
+      <p class="hint">GPS stays off until the guide presses SOS. The map normally shows checkpoint (node) locations only.</p>
+    </div>
+  </section>
+
+  <!-- ================= TRAIL & NODE SETTINGS ================= -->
+  <section id="page-settings" class="page">
+    <div class="page-wrap">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Network configuration</div>
+          <h1>Trail & node settings</h1>
+          <p>Mock coordinates and coverage estimates. Editing a radius resizes its circle on the map.</p>
+        </div>
+        <button id="addNodeBtn" class="btn btn-primary"><i data-lucide="plus"></i>Add node</button>
+      </div>
+
+      <div class="card">
+        <div class="card-head">
+          <div><h2>Gateway & nodes</h2><div class="sub">Coverage values are estimates until field testing</div></div>
+          <span class="badge badge-slate" id="settingsNodeCount">4 points</span>
+        </div>
+        <div class="table-scroll">
+          <table class="data-table settings-table">
+            <thead><tr><th>Name</th><th>Type</th><th>Latitude</th><th>Longitude</th><th>Coverage radius</th><th>Actions</th></tr></thead>
+            <tbody id="settingsTableBody"></tbody>
+          </table>
+        </div>
+        <div class="px-4 py-3 border-t border-slate-100 text-[11px] text-slate-500">
+          Lost-contact threshold is set in Guide scheduling → Verification & coverage rules.
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= STAFF LOGINS ================= -->
+  <section id="page-adminlogin" class="page">
+    <div class="login-wrap">
+      <div class="card login-card">
+        <div class="login-head">
+          <div class="login-icon"><i data-lucide="shield-check"></i></div>
+          <div>
+            <div class="eyebrow">Staff access · Admin</div>
+            <h1>Admin sign in</h1>
+            <p>Capacity, SOS alerts, trail settings, and guide scheduling.</p>
+          </div>
+        </div>
+        <form id="adminLoginForm" class="login-form" novalidate>
+          <div class="field">
+            <label for="adminUser">Work email</label>
+            <input id="adminUser" value="admin@ecoconnect.demo" autocomplete="username">
+          </div>
+          <div class="field">
+            <label for="adminPass">Password</label>
+            <input id="adminPass" type="password" value="ridge2026" autocomplete="current-password">
+          </div>
+          <div id="adminLoginError" class="login-error hidden"></div>
+          <button type="submit" class="btn btn-primary w-full" style="padding:12px"><i data-lucide="log-in"></i>Sign in</button>
+          <button type="button" class="btn btn-ghost w-full" id="adminSkip">Continue as demo admin</button>
+          <p class="hint text-center">Demo credentials: admin@ecoconnect.demo · ridge2026 · UI-only demo</p>
+          <button type="button" class="login-back" data-login-back>Continue to visitor booking</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <section id="page-gatelogin" class="page">
+    <div class="login-wrap">
+      <div class="card login-card">
+        <div class="login-head">
+          <div class="login-icon"><i data-lucide="scan-line"></i></div>
+          <div>
+            <div class="eyebrow">Staff access · Gate</div>
+            <h1>Gate staff sign in</h1>
+            <p>Check-in, QR scanning, and offline sync queue.</p>
+          </div>
+        </div>
+        <form id="gateLoginForm" class="login-form" novalidate>
+          <div class="field">
+            <label for="gateUser">Staff ID</label>
+            <input id="gateUser" value="gate.01" autocomplete="username">
+          </div>
+          <div class="field">
+            <label for="gatePin">PIN</label>
+            <input id="gatePin" type="password" value="2468" inputmode="numeric" autocomplete="current-password">
+          </div>
+          <div id="gateLoginError" class="login-error hidden"></div>
+          <button type="submit" class="btn btn-primary w-full" style="padding:12px"><i data-lucide="log-in"></i>Sign in</button>
+          <button type="button" class="btn btn-ghost w-full" id="gateSkip">Continue as demo gate staff</button>
+          <p class="hint text-center">Demo credentials: gate.01 · PIN 2468 · UI-only demo</p>
+          <button type="button" class="login-back" data-login-back>Continue to visitor booking</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= GATE TERMINAL ================= -->
+  <section id="page-gate" class="page">
+    <div class="page-wrap">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Entry gate · Tablet mode</div>
+          <h1>Gate terminal</h1>
+          <p>Scan booking QRs, verify walk-ins, and keep checking visitors in during outages.</p>
+        </div>
+        <div class="head-actions">
+          <span class="badge badge-green"><i data-lucide="download" class="w-3.5 h-3.5"></i>Installable · Works offline</span>
+          <div class="online-toggle">
+            <span id="netBadge" class="badge badge-green"><span class="dot"></span>ONLINE</span>
+            <label class="switch" aria-label="Toggle network outage">
+              <input type="checkbox" id="onlineToggle" checked>
+              <span class="track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div id="offlineBanner" class="offline-banner hidden">
+        <i data-lucide="cloud-off"></i>
+        <div><b>Using local cache</b> – check-ins queued</div>
+        <span class="queue-chip">Queued: <b id="queueCount">0</b></span>
+      </div>
+
+      <div class="grid-main">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>QR entry scanner</h2><div class="sub">Point the visitor's booking QR at the tablet camera</div></div>
+            <span class="badge badge-slate">Gate 1 · Kiosk</span>
+          </div>
+          <div class="card-body">
+            <div class="scan-stage">
+              <div class="scan-frame"><i data-lucide="qr-code"></i><span class="scan-line"></span></div>
+              <p class="text-xs text-slate-500">Camera preview (mock)</p>
+            </div>
+            <button id="scanBtn" class="btn btn-primary w-full mt-4" style="padding:12px"><i data-lucide="scan-line"></i>Simulate QR scan</button>
+            <div class="divider">or enter code manually</div>
+            <div class="flex gap-2">
+              <input id="manualCode" class="input" placeholder="EC-2407-118" autocomplete="off">
+              <button id="manualVerify" class="btn btn-ghost">Verify</button>
+            </div>
+            <p class="hint">Demo codes: EC-2407-118 (valid) · EC-2407-092 (already used) · EC-9999-001 (not found)</p>
+            <div class="flex items-center justify-between gap-2 mt-3 pt-3 border-t border-slate-100">
+              <span class="text-[11px] text-slate-400">Last sync: 12:43 PM · gate 1</span>
+              <button id="resetGateBtn" class="btn btn-ghost btn-sm"><i data-lucide="rotate-ccw"></i>Reset demo</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="stack">
+          <div class="card">
+            <div class="card-head"><h2>Scan result</h2><span class="badge badge-slate" id="scanBadge">Ready</span></div>
+            <div class="card-body" id="scanResult" aria-live="polite">
+              <div class="empty-state">
+                <div class="empty-icon"><i data-lucide="scan-line"></i></div>
+                <div class="font-semibold">Awaiting scan</div>
+                <div class="text-xs text-slate-500 mt-1">Simulate a QR scan or type a booking code.</div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Recent check-ins</h2><span class="text-[11px] text-slate-400">last 5 scans</span></div>
+            <div class="card-body" id="gateRecent"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="syncCard" class="card mt-18 hidden">
+        <div class="card-head">
+          <div><h2 id="syncTitle">Sync queued check-ins</h2><div class="sub">Uploading local cache to the cloud</div></div>
+          <span id="syncStatus" class="badge badge-amber">0 of 5</span>
+        </div>
+        <div class="card-body">
+          <div class="sync-bar"><div id="syncBar"></div></div>
+          <div id="syncLog"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= SCHEDULING ================= -->
+  <section id="page-scheduling" class="page">
+    <div class="page-wrap">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Rule-based assignment</div>
+          <h1>Guide scheduling</h1>
+          <p>Bookings are matched to guides by six rules. Everything here is a visual simulation.</p>
+        </div>
+        <div class="head-actions">
+          <button id="autoAssignBtn" class="btn btn-primary"><i data-lucide="wand-2"></i>Run auto-assignment</button>
+        </div>
+      </div>
+
+      <div class="grid-main">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Bookings queue</h2><div class="sub" id="bookingCount">9 bookings</div></div>
+            <span class="badge badge-amber" id="pendingBadge">3 need attention</span>
+          </div>
+          <div class="table-scroll">
+            <table class="data-table">
+              <thead><tr><th>Code</th><th>Group</th><th>Guide</th><th>Status</th></tr></thead>
+              <tbody id="bookingsBody"></tbody>
+            </table>
+          </div>
+          <div class="px-4 py-3 border-t border-slate-100 text-[11px] text-slate-500">
+            R6 keeps oversized groups in manual review. Auto-assignment never overrides that flag.
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <div><h2>Rule panel</h2><div class="sub">R1–R6 · editable thresholds</div></div>
+            <span class="badge badge-green"><span class="dot"></span>Active</span>
+          </div>
+          <div id="rulesList"></div>
+          <div class="rule-row">
+            <div class="flex items-start gap-2.5">
+              <span class="rule-code">R7</span>
+              <div><div class="text-[12.5px] font-bold">Lost-contact threshold</div><div class="text-[11px] text-slate-500">Flag a guide when no node hears their tracker for this long.</div></div>
+            </div>
+            <div class="rule-threshold">
+              <label for="lostThresholdInput">Flag after</label>
+              <input id="lostThresholdInput" type="number" min="5" max="120" value="30">
+              <span>minutes</span>
+            </div>
+          </div>
+          <div class="p-4 border-t border-slate-100 flex items-center justify-between gap-2">
+            <span class="text-[11px] text-slate-500">Changes apply to this demo only.</span>
+            <button id="saveRulesBtn" class="btn btn-ghost btn-sm"><i data-lucide="save"></i>Save rules</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card mt-18">
+        <div class="card-head">
+          <div><h2>Assignments per guide</h2><div class="sub">This week · updates as bookings are assigned</div></div>
+          <span class="badge badge-slate">Fair rotation target: 1:12</span>
+        </div>
+        <div class="chart-box tall"><canvas id="guideChart"></canvas></div>
+      </div>
+
+      <div class="card mt-18">
+        <div class="card-head">
+          <div><h2>Guide notices</h2><div class="sub">Leave and off-duty requests · approval updates Rule R2 availability</div></div>
+          <span class="badge badge-amber" id="noticeCount">2 pending</span>
+        </div>
+        <div id="guideNoticesAdmin"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= METRICS ================= -->
+  <section id="page-metrics" class="page">
+    <div class="page-wrap">
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">Prototype telemetry</div>
+          <h1>Metrics</h1>
+          <p>Mock numbers for the defense deck — dispatch quality, sync integrity, and LoRa performance.</p>
+        </div>
+        <span class="badge badge-green"><i data-lucide="activity" class="w-3.5 h-3.5"></i>All systems nominal</span>
+      </div>
+
+      <div class="metric-cards">
+        <div class="card metric-card"><div class="label">Dispatch accuracy</div><div class="value" id="metricDispatch">96%</div><div class="note">Guides matched correctly</div></div>
+        <div class="card metric-card"><div class="label">Sync integrity</div><div class="value" id="metricSync">100%</div><div class="note">No lost check-ins</div></div>
+        <div class="card metric-card"><div class="label">LoRa delivery</div><div class="value" id="metricLora">94%</div><div class="note" id="metricLoraNote">1,284 packets today</div></div>
+        <div class="card metric-card"><div class="label">SOS latency</div><div class="value" id="metricLatency">3.2 s</div><div class="note">Button to dashboard</div></div>
+        <div class="card metric-card"><div class="label">Dashboard response</div><div class="value" id="metricResponse">180 ms</div><div class="note">Median render time</div></div>
+      </div>
+
+      <div class="grid-2 mb-18">
+        <div class="card metric-card">
+          <div class="label">GPS fix rate on SOS</div>
+          <div class="value" id="reportGpsFix">80%</div>
+          <div class="note">Resolved alerts with a GPS point</div>
+        </div>
+        <div class="card metric-card">
+          <div class="label">Average SOS response time</div>
+          <div class="value" id="reportResponse">2 min 40 s</div>
+          <div class="note">Received → resolved · mock data</div>
+        </div>
+      </div>
+
+      <div class="dash-grid">
+        <div class="card">
+          <div class="card-head">
+            <div><h2>LoRa packet delivery by checkpoint</h2><div class="sub">Target ≥ 90% · CP3 currently degraded</div></div>
+            <span class="badge badge-amber">CP3 · 84%</span>
+          </div>
+          <div class="chart-box tall"><canvas id="loraChart"></canvas></div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <div><h2>RSSI per checkpoint</h2><div class="sub">dBm · closer to 0 is stronger</div></div>
+            <span class="badge badge-slate">Last 24 h</span>
+          </div>
+          <div class="chart-box tall"><canvas id="rssiChart"></canvas></div>
+        </div>
+      </div>
+
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-head"><div><h2>System health</h2><div class="sub">Mock checks · refreshed 12:44 PM</div></div></div>
+          <div class="card-body" id="healthList"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><div><h2>What these numbers mean</h2><div class="sub">Capstone scope notes</div></div></div>
+          <div class="card-body">
+            <div class="list-check">
+              <div><i data-lucide="check-circle-2"></i><span><b>Dispatch accuracy</b> — bookings matched by R1–R6 without manual override.</span></div>
+              <div><i data-lucide="check-circle-2"></i><span><b>Sync integrity</b> — offline gate scans reconciled after reconnection, duplicates flagged.</span></div>
+              <div><i data-lucide="check-circle-2"></i><span><b>SOS latency</b> — LoRa packet received at the gateway to alert shown on this dashboard.</span></div>
+              <div><i data-lucide="alert-triangle"></i><span><b>Not included:</b> payments, ticketing, GPS streaming, or persistent storage.</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="site-footer">
+  <div><b>EcoConnect</b> – BukSU IT Capstone Prototype</div>
+  <div class="sub">Visual demo only · mock data, no real bookings or emergency services</div>
+</footer>
+<div id="toasts" aria-live="polite"></div>
+
+<script src="vendor/chart.umd.min.js"></script>
+<script src="vendor/lucide.min.js"></script>
+<script src="mockData.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
